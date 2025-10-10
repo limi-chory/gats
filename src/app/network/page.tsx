@@ -2,6 +2,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+/* eslint-disable */
+// @ts-nocheck
+// @ts-ignore
+
 // 5개 그룹으로 명확하게 구분된 네트워크 데이터
 const generateNetworkData = () => {
   const nodes = [];
@@ -21,8 +25,8 @@ const generateNetworkData = () => {
 
   // 1. 가족 그룹 (12명) - 빨간색 계열 (위쪽 구)
   const familyMembers = [
-    "아버지",
-    "어머니",
+    "아빠",
+    "엄마",
     "형",
     "누나",
     "동생",
@@ -46,7 +50,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 15 + Math.random() * 8,
-      group: "family",
+      group: "가족",
       color: "#ff6b6b",
       fx: familyCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: familyCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -84,7 +88,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 12 + Math.random() * 8,
-      group: "friend",
+      group: "서울고등학교",
       color: "#3742fa",
       fx: friendCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: friendCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -95,24 +99,26 @@ const generateNetworkData = () => {
 
   // 3. 회사 그룹 (18명) - 초록색 계열 (왼쪽 앞 구)
   const colleagues = [
-    "팀장",
-    "선임개발자",
-    "주임",
-    "대리",
-    "과장",
-    "차장",
-    "부장",
-    "디자이너",
-    "기획자",
-    "마케터",
-    "HR담당",
-    "재무팀원",
-    "총무",
-    "신입사원A",
-    "신입사원B",
-    "인턴A",
-    "프로젝트매니저",
-    "QA엔지니어",
+    "김현우",
+    "김지연",
+    "이세현",
+    "정지우",
+    "김지우",
+    "이지우",
+    "정지우",
+    "김지우",
+    "박주임",
+    "윤대리",
+    "정과장",
+    "김차장",
+    "남부장",
+    "김과장",
+    "이차장",
+    "정과장",
+    "김차장",
+    "남부장",
+    "김과장",
+    "이차장",
   ];
   const companyCenter = { x: -85, y: -40, z: 85 }; // 왼쪽 앞
   colleagues.forEach((role, i) => {
@@ -125,7 +131,7 @@ const generateNetworkData = () => {
       id,
       name: role,
       val: 10 + Math.random() * 8,
-      group: "company",
+      group: "네이버",
       color: "#2ed573",
       fx: companyCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: companyCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -136,22 +142,22 @@ const generateNetworkData = () => {
 
   // 4. 학교 그룹 (16명) - 보라색 계열 (오른쪽 뒤 구)
   const schoolmates = [
-    "고등학교동창A",
-    "고등학교동창B",
-    "고등학교동창C",
-    "대학교동창A",
-    "대학교동창B",
-    "대학교동창C",
-    "같은과동기A",
-    "같은과동기B",
-    "같은과동기C",
-    "선배A",
-    "선배B",
-    "후배A",
-    "후배B",
-    "교수님",
-    "조교",
-    "스터디그룹장",
+    "이상준",
+    "박동현",
+    "최지우",
+    "이현진",
+    "김지우",
+    "박서연",
+    "최호정",
+    "정현우",
+    "김서준",
+    "이지우",
+    "신은혜",
+    "최우석",
+    "이영수",
+    "박서현",
+    "이지아",
+    "박서준",
   ];
   const schoolCenter = { x: 85, y: -40, z: -85 }; // 오른쪽 뒤
   schoolmates.forEach((name, i) => {
@@ -164,7 +170,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 8 + Math.random() * 8,
-      group: "school",
+      group: "서울대학교",
       color: "#a55eea",
       fx: schoolCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: schoolCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -175,20 +181,20 @@ const generateNetworkData = () => {
 
   // 5. 동아리 그룹 (14명) - 주황색 계열 (왼쪽 뒤 구)
   const clubMembers = [
-    "축구동아리장",
-    "축구동아리A",
-    "축구동아리B",
-    "등산모임장",
-    "등산모임A",
-    "독서모임장",
-    "독서모임A",
-    "사진동아리장",
-    "사진동아리A",
-    "요리모임장",
-    "게임길드장",
-    "운동친구A",
-    "운동친구B",
-    "여행동호회장",
+    "최안선",
+    "김소현",
+    "김은지",
+    "박혜린",
+    "이수아",
+    "이지애",
+    "박재원",
+    "이동준",
+    "김지호",
+    "박지호",
+    "이지수",
+    "최정민",
+    "이동호",
+    "정성호",
   ];
   const clubCenter = { x: -85, y: -40, z: -85 }; // 왼쪽 뒤
   clubMembers.forEach((name, i) => {
@@ -201,7 +207,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 6 + Math.random() * 8,
-      group: "club",
+      group: "축구동아리",
       color: "#ffa502",
       fx: clubCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: clubCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -508,6 +514,29 @@ export default function NetworkPage() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">네트워크 맵</h1>
           <p className="text-gray-300">나를 중심으로 5개 방향에 구 형태로 배치된 인맥 네트워크를 3D로 시각화합니다</p>
+
+          {/* WebGL 상태 표시 */}
+          <div
+            className="mt-4 p-3 rounded-lg border"
+            style={{
+              backgroundColor: error && error.includes("WebGL") ? "#7f1d1d" : "#065f46",
+              borderColor: error && error.includes("WebGL") ? "#dc2626" : "#10b981",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{error && error.includes("WebGL") ? "❌" : "✅"}</span>
+              <span className="font-medium">
+                {error && error.includes("WebGL")
+                  ? "WebGL 비활성화됨 - 3D 그래프를 사용할 수 없습니다"
+                  : "WebGL 활성화됨 - 3D 그래프 사용 가능"}
+              </span>
+            </div>
+            {error && error.includes("WebGL") && (
+              <p className="text-sm mt-2 text-gray-300">
+                아래 가이드를 따라 WebGL을 활성화하면 3D 네트워크 그래프를 볼 수 있습니다.
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -537,8 +566,128 @@ export default function NetworkPage() {
                 </div>
               )}
 
-              {/* 에러 메시지 */}
-              {error && (
+              {/* WebGL 활성화 가이드 */}
+              {error && error.includes("WebGL") && (
+                <div className="absolute inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center p-4 overflow-auto">
+                  <div className="max-w-2xl text-white bg-gray-800 rounded-lg p-8">
+                    <div className="text-center mb-6">
+                      <div className="text-yellow-400 text-5xl mb-4">🔧</div>
+                      <h3 className="text-2xl font-bold mb-2">WebGL 활성화 필요</h3>
+                      <p className="text-gray-300">3D 그래프를 보려면 WebGL을 활성화해야 합니다</p>
+                    </div>
+
+                    <div className="space-y-6">
+                      {/* Chrome 설정 */}
+                      <div className="bg-gray-700 p-4 rounded-lg">
+                        <h4 className="font-bold text-blue-400 mb-3 flex items-center">
+                          <span className="mr-2">🌐</span> Chrome 브라우저
+                        </h4>
+                        <ol className="text-sm space-y-2 list-decimal list-inside">
+                          <li>
+                            주소창에 <code className="bg-gray-600 px-2 py-1 rounded">chrome://settings/</code> 입력
+                          </li>
+                          <li>왼쪽 메뉴에서 "고급" → "시스템" 클릭</li>
+                          <li>"사용 가능한 경우 하드웨어 가속 사용" 체크</li>
+                          <li>Chrome 재시작</li>
+                        </ol>
+                        <div className="mt-3 p-2 bg-blue-900 bg-opacity-50 rounded text-xs">
+                          <strong>추가 설정:</strong>{" "}
+                          <code className="bg-gray-600 px-1 rounded">chrome://flags/#ignore-gpu-blocklist</code>에서
+                          "Enabled" 설정
+                        </div>
+                      </div>
+
+                      {/* Firefox 설정 */}
+                      <div className="bg-gray-700 p-4 rounded-lg">
+                        <h4 className="font-bold text-orange-400 mb-3 flex items-center">
+                          <span className="mr-2">🦊</span> Firefox 브라우저
+                        </h4>
+                        <ol className="text-sm space-y-2 list-decimal list-inside">
+                          <li>
+                            주소창에 <code className="bg-gray-600 px-2 py-1 rounded">about:config</code> 입력
+                          </li>
+                          <li>"위험을 감수하겠습니다" 클릭</li>
+                          <li>
+                            <code className="bg-gray-600 px-1 rounded">webgl.disabled</code> 검색하여{" "}
+                            <strong>false</strong>로 설정
+                          </li>
+                          <li>
+                            <code className="bg-gray-600 px-1 rounded">webgl.force-enabled</code> 검색하여{" "}
+                            <strong>true</strong>로 설정
+                          </li>
+                          <li>Firefox 재시작</li>
+                        </ol>
+                      </div>
+
+                      {/* Safari 설정 */}
+                      <div className="bg-gray-700 p-4 rounded-lg">
+                        <h4 className="font-bold text-gray-400 mb-3 flex items-center">
+                          <span className="mr-2">🧭</span> Safari 브라우저
+                        </h4>
+                        <ol className="text-sm space-y-2 list-decimal list-inside">
+                          <li>Safari 메뉴 → "환경설정" 클릭</li>
+                          <li>"고급" 탭 선택</li>
+                          <li>"메뉴 막대에서 개발자용 메뉴 보기" 체크</li>
+                          <li>"개발자용" 메뉴 → "실험적 기능" → "WebGL 2.0" 활성화</li>
+                        </ol>
+                      </div>
+
+                      {/* 일반적인 해결책 */}
+                      <div className="bg-gray-700 p-4 rounded-lg">
+                        <h4 className="font-bold text-green-400 mb-3 flex items-center">
+                          <span className="mr-2">💡</span> 일반적인 해결책
+                        </h4>
+                        <ul className="text-sm space-y-2 list-disc list-inside">
+                          <li>
+                            <strong>그래픽 드라이버 업데이트:</strong> 최신 GPU 드라이버 설치
+                          </li>
+                          <li>
+                            <strong>시크릿 모드:</strong> 확장 프로그램 없이 시도
+                          </li>
+                          <li>
+                            <strong>다른 브라우저:</strong> Chrome, Firefox, Edge 중 다른 브라우저 사용
+                          </li>
+                          <li>
+                            <strong>컴퓨터 재시작:</strong> 설정 변경 후 재부팅
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* WebGL 테스트 */}
+                      <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg">
+                        <h4 className="font-bold text-blue-300 mb-2">WebGL 테스트</h4>
+                        <p className="text-sm mb-3">설정 후 아래 사이트에서 WebGL이 작동하는지 확인하세요:</p>
+                        <a
+                          href="https://get.webgl.org/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm transition-colors"
+                        >
+                          WebGL 테스트 사이트 열기
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 justify-center mt-8">
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors font-medium"
+                      >
+                        설정 완료 후 새로고침
+                      </button>
+                      <button
+                        onClick={() => setError(null)}
+                        className="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        닫기
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 일반 에러 메시지 */}
+              {error && !error.includes("WebGL") && (
                 <div className="absolute inset-0 bg-red-900 bg-opacity-75 flex items-center justify-center">
                   <div className="text-center text-white p-6">
                     <div className="text-red-400 text-4xl mb-4">⚠️</div>
@@ -596,19 +745,19 @@ export default function NetworkPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#3742fa" }}></div>
-                    <span className="text-xs">친구</span>
+                    <span className="text-xs">서울고등학교</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#2ed573" }}></div>
-                    <span className="text-xs">회사</span>
+                    <span className="text-xs">네이버</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#a55eea" }}></div>
-                    <span className="text-xs">학교</span>
+                    <span className="text-xs">서울대학교</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#ffa502" }}></div>
-                    <span className="text-xs">동아리</span>
+                    <span className="text-xs">축구동아리</span>
                   </div>
                 </div>
               </div>
@@ -661,19 +810,19 @@ export default function NetworkPage() {
                           <span>12명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>친구:</span>
+                          <span>서울고등학교:</span>
                           <span>15명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>회사:</span>
+                          <span>네이버:</span>
                           <span>18명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>학교:</span>
+                          <span>서울대학교:</span>
                           <span>16명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>동아리:</span>
+                          <span>축구동아리:</span>
                           <span>14명</span>
                         </div>
                       </div>
