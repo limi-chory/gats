@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Script from "next/script";
 import "./globals.css";
-import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,14 +18,6 @@ export const metadata: Metadata = {
   title: "GATS - 네트워크 연결 플랫폼",
   description: "AI로 당신의 전체 네트워크를 분석해서 가장 짧은 연결 경로를 보여주는 플랫폼",
 };
-
-declare global {
-  interface Window {
-    ForceGraph3D: any;
-    THREE: any;
-    d3: any;
-  }
-}
 
 export default function RootLayout({
   children,
@@ -47,9 +37,7 @@ export default function RootLayout({
           <header className="border-b">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <Link href="/dashboard" className="text-2xl font-bold">
-                  GATS
-                </Link>
+                <h1 className="text-2xl font-bold">GATS</h1>
               </div>
               <div className="flex items-center gap-4">
                 <SignedOut>

@@ -1,15 +1,11 @@
 "use client";
 
-/* eslint-disable */
-// @ts-nocheck
-// @ts-ignore
-
 import React, { useEffect, useRef, useState } from "react";
 
 // 5개 그룹으로 명확하게 구분된 네트워크 데이터
 const generateNetworkData = () => {
   const nodes = [];
-  const links: { source: string; target: string; strength: number }[] = [];
+  const links = [];
 
   // 중심 사용자
   nodes.push({
@@ -25,8 +21,8 @@ const generateNetworkData = () => {
 
   // 1. 가족 그룹 (12명) - 빨간색 계열 (위쪽 구)
   const familyMembers = [
-    "아빠",
-    "엄마",
+    "아버지",
+    "어머니",
     "형",
     "누나",
     "동생",
@@ -43,14 +39,14 @@ const generateNetworkData = () => {
     // 구 표면에 균등하게 분포
     const phi = Math.acos(1 - (2 * (i + 0.5)) / familyMembers.length); // 위도
     const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5); // 경도 (황금비)
-    const sphereRadius = 60;
+    const sphereRadius = 40;
 
     const id = `family_${i}`;
     nodes.push({
       id,
       name,
       val: 15 + Math.random() * 8,
-      group: "가족",
+      group: "family",
       color: "#ff6b6b",
       fx: familyCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: familyCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -88,7 +84,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 12 + Math.random() * 8,
-      group: "서울고등학교",
+      group: "friend",
       color: "#3742fa",
       fx: friendCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: friendCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -99,24 +95,24 @@ const generateNetworkData = () => {
 
   // 3. 회사 그룹 (18명) - 초록색 계열 (왼쪽 앞 구)
   const colleagues = [
-    "김영석",
-    "이승원",
-    "이정훈",
-    "김준혁",
-    "이종욱",
-    "홍기석",
+    "팀장",
+    "선임개발자",
+    "주임",
+    "대리",
+    "과장",
+    "차장",
     "부장",
-    "신선욱",
+    "디자이너",
     "기획자",
-    "김유신",
-    "김장식",
+    "마케터",
+    "HR담당",
     "재무팀원",
-    "김경리",
-    "전성준",
-    "조동훈",
-    "전준영",
-    "이동준",
-    "오인준",
+    "총무",
+    "신입사원A",
+    "신입사원B",
+    "인턴A",
+    "프로젝트매니저",
+    "QA엔지니어",
   ];
   const companyCenter = { x: -85, y: -40, z: 85 }; // 왼쪽 앞
   colleagues.forEach((role, i) => {
@@ -129,7 +125,7 @@ const generateNetworkData = () => {
       id,
       name: role,
       val: 10 + Math.random() * 8,
-      group: "Naver",
+      group: "company",
       color: "#2ed573",
       fx: companyCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: companyCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -140,17 +136,22 @@ const generateNetworkData = () => {
 
   // 4. 학교 그룹 (16명) - 보라색 계열 (오른쪽 뒤 구)
   const schoolmates = [
-    "고태희",
-    "김수지",
-    "김지운",
-    "문근영",
-    "박선주",
-    "박지현",
-    "오민지",
-    "최승환",
+    "고등학교동창A",
+    "고등학교동창B",
+    "고등학교동창C",
+    "대학교동창A",
+    "대학교동창B",
+    "대학교동창C",
+    "같은과동기A",
+    "같은과동기B",
+    "같은과동기C",
+    "선배A",
+    "선배B",
+    "후배A",
+    "후배B",
     "교수님",
-    "홍예린",
-    "주한주",
+    "조교",
+    "스터디그룹장",
   ];
   const schoolCenter = { x: 85, y: -40, z: -85 }; // 오른쪽 뒤
   schoolmates.forEach((name, i) => {
@@ -163,7 +164,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 8 + Math.random() * 8,
-      group: "서울대학교",
+      group: "school",
       color: "#a55eea",
       fx: schoolCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: schoolCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -174,20 +175,20 @@ const generateNetworkData = () => {
 
   // 5. 동아리 그룹 (14명) - 주황색 계열 (왼쪽 뒤 구)
   const clubMembers = [
-    "장지훈",
-    "전민원",
-    "손준우",
-    "이동헌",
-    "송현진",
-    "박찬혁",
-    "이영빈",
-    "조은중",
-    "김도우",
-    "손승호",
-    "박인준",
-    "전선아",
-    "안하연",
-    "김서현",
+    "축구동아리장",
+    "축구동아리A",
+    "축구동아리B",
+    "등산모임장",
+    "등산모임A",
+    "독서모임장",
+    "독서모임A",
+    "사진동아리장",
+    "사진동아리A",
+    "요리모임장",
+    "게임길드장",
+    "운동친구A",
+    "운동친구B",
+    "여행동호회장",
   ];
   const clubCenter = { x: -85, y: -40, z: -85 }; // 왼쪽 뒤
   clubMembers.forEach((name, i) => {
@@ -200,7 +201,7 @@ const generateNetworkData = () => {
       id,
       name,
       val: 6 + Math.random() * 8,
-      group: "축구동아리",
+      group: "club",
       color: "#ffa502",
       fx: clubCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
       fy: clubCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
@@ -333,7 +334,7 @@ export default function NetworkPage() {
   useEffect(() => {
     // 데이터 생성
     const data = generateNetworkData();
-    setGraphData(data as any);
+    setGraphData(data);
     console.log("Graph data generated:", data);
   }, []);
 
@@ -356,7 +357,7 @@ export default function NetworkPage() {
         graphData
       ) {
         // 기존 그래프 정리
-        (containerRef.current as HTMLElement).innerHTML = "";
+        containerRef.current.innerHTML = "";
 
         try {
           console.log("Initializing 3D Force Graph...");
@@ -368,28 +369,28 @@ export default function NetworkPage() {
             .ForceGraph3D()(containerRef.current)
             .graphData(graphData)
             .nodeLabel(
-              (node: any) =>
+              (node) =>
                 `<div style="color: white; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 4px;">${node.name}<br/>그룹: ${node.group}<br/>연결강도: ${node.val}</div>`
             )
-            .nodeColor((node: any) => node.color)
-            .nodeVal((node: any) => node.val)
+            .nodeColor((node) => node.color)
+            .nodeVal((node) => node.val)
             .nodeOpacity(0.9)
             .linkColor(() => "rgba(255,255,255,0.4)")
-            .linkWidth((link: any) => link.strength * 2)
+            .linkWidth((link) => link.strength * 2)
             .linkOpacity(0.4)
             .backgroundColor("#0a0a0a")
             .showNavInfo(false)
-            .width((containerRef.current as HTMLElement).clientWidth)
-            .height((containerRef.current as HTMLElement).clientHeight)
-            .onNodeClick((node: any) => {
+            .width(containerRef.current.clientWidth)
+            .height(containerRef.current.clientHeight)
+            .onNodeClick((node) => {
               setSelectedNode(node);
               // 노드 클릭 시 카메라 포커스
               Graph.cameraPosition({ x: node.x + 50, y: node.y + 50, z: node.z + 50 }, node, 1000);
             })
-            .onNodeHover((node: any) => {
+            .onNodeHover((node) => {
               // 호버 시 커서 변경
               if (containerRef.current) {
-                (containerRef.current as HTMLElement).style.cursor = node ? "pointer" : "default";
+                containerRef.current.style.cursor = node ? "pointer" : "default";
               }
             })
             .onEngineStop(() => {
@@ -423,19 +424,19 @@ export default function NetworkPage() {
           // 정리 함수
           return () => {
             if (containerRef.current) {
-              (containerRef.current as HTMLElement).innerHTML = "";
+              containerRef.current.innerHTML = "";
             }
           };
         } catch (err) {
           console.error("Error initializing 3D Force Graph:", err);
-          setError(err as any);
+          setError(err.message);
           setIsLoading(false);
         }
       } else {
         // ForceGraph3D가 아직 로드되지 않은 경우 재시도
         const timer = setTimeout(() => {
           if (typeof window !== "undefined" && !window.ForceGraph3D) {
-            setError("3D Force Graph 라이브러리를 로드할 수 없습니다." as any);
+            setError("3D Force Graph 라이브러리를 로드할 수 없습니다.");
             setIsLoading(false);
           }
         }, 5000);
@@ -460,7 +461,7 @@ export default function NetworkPage() {
         // 10초 후 타임아웃
         const timeout = setTimeout(() => {
           clearInterval(checkInterval);
-          setError("3D Force Graph 라이브러리 로딩 시간 초과" as any);
+          setError("3D Force Graph 라이브러리 로딩 시간 초과");
           setIsLoading(false);
         }, 10000);
 
@@ -473,9 +474,9 @@ export default function NetworkPage() {
   }, [graphData]);
 
   // 노드 텍스처 생성 함수
-  const generateNodeTexture = (text: string, color: string, isSpecial = false) => {
+  const generateNodeTexture = (text, color, isSpecial = false) => {
     const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    const context = canvas.getContext("2d");
     canvas.width = 64;
     canvas.height = 64;
 
@@ -566,7 +567,7 @@ export default function NetworkPage() {
                 className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
                 onClick={() => {
                   if (graphRef.current) {
-                    (graphRef.current as any).zoomToFit(1000, 50);
+                    graphRef.current.zoomToFit(1000, 50);
                   }
                 }}
               >
@@ -576,7 +577,7 @@ export default function NetworkPage() {
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
                 onClick={() => {
                   if (graphRef.current) {
-                    (graphRef.current as any).cameraPosition({ x: 150, y: 100, z: 200 }, { x: 0, y: 0, z: 0 }, 1000);
+                    graphRef.current.cameraPosition({ x: 150, y: 100, z: 200 }, { x: 0, y: 0, z: 0 }, 1000);
                   }
                 }}
               >
@@ -595,19 +596,19 @@ export default function NetworkPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#3742fa" }}></div>
-                    <span className="text-xs">서울고등학교</span>
+                    <span className="text-xs">친구</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#2ed573" }}></div>
-                    <span className="text-xs">Naver</span>
+                    <span className="text-xs">회사</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#a55eea" }}></div>
-                    <span className="text-xs">서울대학교</span>
+                    <span className="text-xs">학교</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#ffa502" }}></div>
-                    <span className="text-xs">축구동아리</span>
+                    <span className="text-xs">동아리</span>
                   </div>
                 </div>
               </div>
@@ -622,9 +623,9 @@ export default function NetworkPage() {
               {selectedNode ? (
                 <div className="space-y-3">
                   <div>
-                    <h4 className="font-medium text-blue-400">{(selectedNode as any).name}</h4>
-                    <p className="text-sm text-gray-400">그룹: {(selectedNode as any).group}</p>
-                    <p className="text-sm text-gray-400">연결 강도: {(selectedNode as any).val}</p>
+                    <h4 className="font-medium text-blue-400">{selectedNode.name}</h4>
+                    <p className="text-sm text-gray-400">그룹: {selectedNode.group}</p>
+                    <p className="text-sm text-gray-400">연결 강도: {selectedNode.val}</p>
                   </div>
                   <button
                     className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-colors"
@@ -647,11 +648,11 @@ export default function NetworkPage() {
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
                         <span>총 노드:</span>
-                        <span className="font-semibold text-blue-400">{(graphData as any)?.nodes?.length || 0}</span>
+                        <span className="font-semibold text-blue-400">{graphData?.nodes?.length || 0}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>총 연결:</span>
-                        <span className="font-semibold text-green-400">{(graphData as any)?.links?.length || 0}</span>
+                        <span className="font-semibold text-green-400">{graphData?.links?.length || 0}</span>
                       </div>
                       <div className="mt-3 space-y-1">
                         <div className="text-xs text-gray-500">그룹별 분포:</div>
@@ -660,19 +661,19 @@ export default function NetworkPage() {
                           <span>12명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>서울고등학교:</span>
+                          <span>친구:</span>
                           <span>15명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>Naver:</span>
+                          <span>회사:</span>
                           <span>18명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>서울대학교:</span>
+                          <span>학교:</span>
                           <span>16명</span>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span>축구동아리:</span>
+                          <span>동아리:</span>
                           <span>14명</span>
                         </div>
                       </div>
