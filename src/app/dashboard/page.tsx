@@ -113,6 +113,23 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <button
+            onClick={() => router.push("/messages")}
+            className="bg-gradient-to-br from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-1">메시지</h3>
+            <p className="text-yellow-100 text-sm">대화 내역 보기</p>
+          </button>
+          <button
             onClick={() => router.push("/network")}
             className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
           >
@@ -130,7 +147,6 @@ export default function DashboardPage() {
             <h3 className="text-xl font-semibold mb-1">네트워크 맵</h3>
             <p className="text-blue-100 text-sm">내 인맥을 시각적으로 탐색하기</p>
           </button>
-
           <button
             onClick={() => router.push("/search")}
             className="bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
@@ -148,28 +164,6 @@ export default function DashboardPage() {
             </div>
             <h3 className="text-xl font-semibold mb-1">AI 검색</h3>
             <p className="text-purple-100 text-sm">원하는 사람 찾기</p>
-          </button>
-
-          <button
-            onClick={() => showComingSoonToast("소개 요청")}
-            className="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
-          >
-            <div className="absolute top-2 right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded">
-              개발 예정
-            </div>
-            <div className="flex items-center justify-between mb-2">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
-              <span className="text-green-100 text-sm">🚧</span>
-            </div>
-            <h3 className="text-xl font-semibold mb-1">소개 요청</h3>
-            <p className="text-green-100 text-sm">진행 중인 연결 보기</p>
           </button>
         </div>
 
@@ -192,7 +186,6 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">{MOCK_PROFILE.company}</p>
                 </div>
               </div>
-
               <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,7 +210,6 @@ export default function DashboardPage() {
                   {MOCK_PROFILE.school}
                 </div>
               </div>
-
               <div className="flex flex-wrap gap-2">
                 {MOCK_PROFILE.interests.map((interest) => (
                   <span
@@ -234,6 +226,83 @@ export default function DashboardPage() {
                 className="w-full mt-4 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
               >
                 프로필 수정 <span className="text-xs">🚧</span>
+              </button>
+            </div>
+
+            {/* Group Activity Notifications */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative">
+              <div className="absolute top-4 right-4 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
+                📝 Mock 데이터
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <span className="text-blue-500">🔔</span>
+                그룹 활동 알림
+              </h3>
+
+              <div className="space-y-4">
+                {/* 서울대학교 경영학과 알림 */}
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-sm font-bold">🎓</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
+                        서울대학교 경영학과 23학번
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        최근 그룹에서{" "}
+                        <span className="font-medium text-blue-600 dark:text-blue-400">창업 및 팀빌딩</span> 관련 대화가{" "}
+                        <span className="font-bold text-green-600 dark:text-green-400">31%</span> 늘었어요.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 가족 그룹 알림 */}
+                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-sm font-bold">👨‍👩‍👧‍👦</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">가족</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        최근 그룹에서 <span className="font-medium text-green-600 dark:text-green-400">추석 명절</span>{" "}
+                        관련 새로운 대화가 시작되고있어요.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 네이버 그룹 알림 */}
+                <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-sm font-bold">🏢</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">네이버</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        최근 그룹에서{" "}
+                        <span className="font-medium text-purple-600 dark:text-purple-400">스테이블 코인 프로젝트</span>{" "}
+                        관련 대화가 <span className="font-bold text-green-600 dark:text-green-400">22%</span> 늘었어요.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 더 알아보기 버튼 */}
+              <button
+                onClick={() => showComingSoonToast("그룹 활동 상세보기")}
+                className="w-full mt-4 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center justify-center gap-2"
+              >
+                더 알아보기
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+                <span className="text-xs">🚧</span>
               </button>
             </div>
 
