@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Script from "next/script";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,9 @@ export default function RootLayout({
           <header className="border-b">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold">GATS</h1>
+                <Link href="/dashboard" className="text-2xl font-bold">
+                  GATS
+                </Link>
               </div>
               <div className="flex items-center gap-4">
                 <SignedOut>
