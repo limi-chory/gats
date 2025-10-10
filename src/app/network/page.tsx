@@ -513,7 +513,7 @@ export default function NetworkPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">네트워크 맵</h1>
-          <p className="text-gray-300">나를 중심으로 5개 방향에 구 형태로 배치된 인맥 네트워크를 3D로 시각화합니다</p>
+          <p className="text-gray-300">나를 중심으로 네트워크 그래프를 시각화합니다</p>
 
           {/* WebGL 상태 표시 */}
           <div
