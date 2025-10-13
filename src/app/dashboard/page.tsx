@@ -331,12 +331,15 @@ export default function DashboardPage() {
 
               <div className="space-y-4">
                 {/* 서울대학교 경영학과 알림 */}
-                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <button
+                  className="w-full p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-800/30 dark:hover:to-indigo-800/30 transition-all transform hover:scale-105 cursor-pointer"
+                  onClick={() => router.push("/messages/7")}
+                >
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-white text-sm font-bold">🎓</span>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 text-left">
                       <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
                         서울대학교 경영학과 23학번
                       </h4>
@@ -351,15 +354,18 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
 
                 {/* 가족 그룹 알림 */}
-                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <button
+                  className="w-full p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-800/30 dark:hover:to-emerald-800/30 transition-all transform hover:scale-105 cursor-pointer"
+                  onClick={() => router.push("/messages/8")}
+                >
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-white text-sm font-bold">👨‍👩‍👧‍👦</span>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 text-left">
                       <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">가족</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         <span>최근 그룹에서 </span>
@@ -372,15 +378,18 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
 
                 {/* 네이버 그룹 알림 */}
-                <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                <button
+                  className="w-full p-4 bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 border border-purple-200 dark:border-purple-800 rounded-lg hover:from-purple-100 hover:to-violet-100 dark:hover:from-purple-800/30 dark:hover:to-violet-800/30 transition-all transform hover:scale-105 cursor-pointer"
+                  onClick={() => router.push("/messages/9")}
+                >
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-white text-sm font-bold">🏢</span>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 text-left">
                       <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">네이버</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         <span>최근 그룹에서 </span>
@@ -393,7 +402,7 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               {/* 더 알아보기 버튼 */}

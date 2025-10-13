@@ -33,8 +33,11 @@ export default function ChatRoomPage() {
     "2": { id: "2", name: "이지영", isOnline: false },
     "3": { id: "3", name: "엄마", isOnline: true },
     "4": { id: "4", name: "최서연", isOnline: false },
-    "5": { id: "5", name: "정태현", isOnline: true },
-    "6": { id: "6", name: "한소희", isOnline: false },
+    "5": { id: "5", name: "박준호", isOnline: true },
+    "6": { id: "6", name: "이응석", isOnline: false },
+    "7": { id: "7", name: "슈카", isOnline: true },
+    "8": { id: "8", name: "작은 아버지", isOnline: false },
+    "9": { id: "9", name: "최현우", isOnline: true },
   });
 
   // Mock 채팅 기록 데이터
@@ -110,11 +113,56 @@ export default function ChatRoomPage() {
           isRead: false,
         },
       ],
+      "4": [
+        {
+          id: "msg-3-1",
+          senderId: "4",
+          senderName: "최서연",
+          content: "프로젝트 관련해서 문의드립니다.",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000 - 1000 * 60 * 60 * 24), // 1일 전
+          isRead: true,
+        },
+      ],
+      "5": [
+        {
+          id: "msg-5-1",
+          senderId: "5",
+          senderName: "박준호",
+          content: "회의 시간 조정 가능할까요?",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000 - 1000 * 60 * 60 * 24), // 1일 전
+          isRead: false,
+        },
+      ],
+      "6": [
+        {
+          id: "msg-6-1",
+          senderId: currentUserId,
+          senderName: "나",
+          content: "다음주 평일에 같이 저녁 먹을래?",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000 - 1000 * 60 * 60 * 24), // 1일 전
+          isRead: true,
+        },
+        {
+          id: "msg-6-2",
+          senderId: "6",
+          senderName: "이응석",
+          content: "그럼 다음주에 수요일에 볼까?",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000 - 2 * 1000 * 60 * 60 * 24), // 2일 전
+          isRead: false,
+        },
+      ],
     };
     return mockMessages[chatId] || [];
   });
 
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState(() => {
+    const mockInput: Record<string, string> = {
+      "7": "슈카야, 요즘 새로운 창업 대회 같은게 열리는게 있어?",
+      "8": "작은 아버지, 이번 추석에 혹시 계획중이신 일정이 있으신가요?",
+      "9": "최현우님, 안녕하세요.\n스테이블 코인 프로젝트 관련 Smart Contract 쪽에 문의드리고 싶은게 있어요.",
+    };
+    return mockInput[chatId] || "";
+  });
 
   const currentChat = chatUsers[chatId];
 
@@ -274,7 +322,7 @@ export default function ChatRoomPage() {
       {/* Message Input */}
       <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-end space-x-3">
+          <div className="flex items-center space-x-3">
             <div className="flex-1">
               <textarea
                 value={newMessage}
@@ -283,7 +331,7 @@ export default function ChatRoomPage() {
                 placeholder="메시지를 입력하세요..."
                 className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 rows={1}
-                style={{ minHeight: "44px", maxHeight: "120px" }}
+                style={{ minHeight: "60px", maxHeight: "180px" }}
               />
             </div>
 
