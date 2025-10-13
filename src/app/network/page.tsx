@@ -23,7 +23,7 @@ const generateNetworkData = () => {
     fz: 0, // 중앙에 고정
   });
 
-  // 1. 가족 그룹 (12명) - 빨간색 계열 (위쪽 구)
+  // 1. 가족 그룹 (12명) - 빨간색 계열 (위쪽 구역, 자연스럽게 분산)
   const familyMembers = [
     "아빠",
     "엄마",
@@ -38,12 +38,12 @@ const generateNetworkData = () => {
     "외삼촌",
     "사촌형",
   ];
-  const familyCenter = { x: 0, y: 120, z: 0 }; // 위쪽
+  const familyCenter = { x: 0, y: 80, z: 0 }; // 위쪽 (중심에서 더 가까이)
   familyMembers.forEach((name, i) => {
-    // 구 표면에 균등하게 분포
-    const phi = Math.acos(1 - (2 * (i + 0.5)) / familyMembers.length); // 위도
-    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5); // 경도 (황금비)
-    const sphereRadius = 40;
+    // 훨씬 더 자유로운 분포 - 큰 랜덤 오프셋
+    const angle = (i / familyMembers.length) * 2 * Math.PI + (Math.random() - 0.5) * 1.6;
+    const radius = 25 + (Math.random() - 0.5) * 40; // 반지름 변화 2배 증가
+    const height = (Math.random() - 0.5) * 60; // 높이 변화 2배 증가
 
     const id = `family_${i}`;
     nodes.push({
@@ -52,14 +52,14 @@ const generateNetworkData = () => {
       val: 15 + Math.random() * 8,
       group: "가족",
       color: "#ff6b6b",
-      fx: familyCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
-      fy: familyCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
-      fz: familyCenter.z + sphereRadius * Math.cos(phi),
+      fx: familyCenter.x + radius * Math.cos(angle) + (Math.random() - 0.5) * 30,
+      fy: familyCenter.y + height + (Math.random() - 0.5) * 40,
+      fz: familyCenter.z + radius * Math.sin(angle) + (Math.random() - 0.5) * 30,
     });
     links.push({ source: "user", target: id, strength: 0.9 });
   });
 
-  // 2. 친구 그룹 (15명) - 파란색 계열 (오른쪽 앞 구)
+  // 2. 친구 그룹 (15명) - 파란색 계열 (오른쪽 앞 구역, 자연스럽게 분산)
   const friends = [
     "김철수",
     "이영희",
@@ -77,11 +77,11 @@ const generateNetworkData = () => {
     "신우진",
     "배소영",
   ];
-  const friendCenter = { x: 85, y: -40, z: 85 }; // 오른쪽 앞
+  const friendCenter = { x: 60, y: -20, z: 60 }; // 오른쪽 앞 (중심에서 더 가까이)
   friends.forEach((name, i) => {
-    const phi = Math.acos(1 - (2 * (i + 0.5)) / friends.length);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
-    const sphereRadius = 35;
+    const angle = (i / friends.length) * 2 * Math.PI + (Math.random() - 0.5) * 2.0;
+    const radius = 20 + (Math.random() - 0.5) * 50; // 반지름 변화 2배 증가
+    const height = (Math.random() - 0.5) * 70; // 높이 변화 2배 증가
 
     const id = `friend_${i}`;
     nodes.push({
@@ -90,14 +90,14 @@ const generateNetworkData = () => {
       val: 12 + Math.random() * 8,
       group: "서울고등학교",
       color: "#3742fa",
-      fx: friendCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
-      fy: friendCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
-      fz: friendCenter.z + sphereRadius * Math.cos(phi),
+      fx: friendCenter.x + radius * Math.cos(angle) + (Math.random() - 0.5) * 36,
+      fy: friendCenter.y + height + (Math.random() - 0.5) * 50,
+      fz: friendCenter.z + radius * Math.sin(angle) + (Math.random() - 0.5) * 36,
     });
     links.push({ source: "user", target: id, strength: 0.7 + Math.random() * 0.2 });
   });
 
-  // 3. 회사 그룹 (18명) - 초록색 계열 (왼쪽 앞 구)
+  // 3. 회사 그룹 (18명) - 초록색 계열 (왼쪽 앞 구역, 자연스럽게 분산)
   const colleagues = [
     "김현우",
     "김지연",
@@ -120,11 +120,11 @@ const generateNetworkData = () => {
     "김과장",
     "이차장",
   ];
-  const companyCenter = { x: -85, y: -40, z: 85 }; // 왼쪽 앞
+  const companyCenter = { x: -60, y: -20, z: 60 }; // 왼쪽 앞 (중심에서 더 가까이)
   colleagues.forEach((role, i) => {
-    const phi = Math.acos(1 - (2 * (i + 0.5)) / colleagues.length);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
-    const sphereRadius = 38;
+    const angle = (i / colleagues.length) * 2 * Math.PI + (Math.random() - 0.5) * 1.8;
+    const radius = 22 + (Math.random() - 0.5) * 44; // 반지름 변화 2배 증가
+    const height = (Math.random() - 0.5) * 64; // 높이 변화 2배 증가
 
     const id = `company_${i}`;
     nodes.push({
@@ -133,14 +133,14 @@ const generateNetworkData = () => {
       val: 10 + Math.random() * 8,
       group: "네이버",
       color: "#2ed573",
-      fx: companyCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
-      fy: companyCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
-      fz: companyCenter.z + sphereRadius * Math.cos(phi),
+      fx: companyCenter.x + radius * Math.cos(angle) + (Math.random() - 0.5) * 32,
+      fy: companyCenter.y + height + (Math.random() - 0.5) * 44,
+      fz: companyCenter.z + radius * Math.sin(angle) + (Math.random() - 0.5) * 32,
     });
     links.push({ source: "user", target: id, strength: 0.5 + Math.random() * 0.3 });
   });
 
-  // 4. 학교 그룹 (16명) - 보라색 계열 (오른쪽 뒤 구)
+  // 4. 학교 그룹 (16명) - 보라색 계열 (오른쪽 뒤 구역, 자연스럽게 분산)
   const schoolmates = [
     "이상준",
     "박동현",
@@ -159,11 +159,11 @@ const generateNetworkData = () => {
     "이지아",
     "박서준",
   ];
-  const schoolCenter = { x: 85, y: -40, z: -85 }; // 오른쪽 뒤
+  const schoolCenter = { x: 60, y: -20, z: -60 }; // 오른쪽 뒤 (중심에서 더 가까이)
   schoolmates.forEach((name, i) => {
-    const phi = Math.acos(1 - (2 * (i + 0.5)) / schoolmates.length);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
-    const sphereRadius = 36;
+    const angle = (i / schoolmates.length) * 2 * Math.PI + (Math.random() - 0.5) * 1.4;
+    const radius = 18 + (Math.random() - 0.5) * 40; // 반지름 변화 2배 증가
+    const height = (Math.random() - 0.5) * 56; // 높이 변화 2배 증가
 
     const id = `school_${i}`;
     nodes.push({
@@ -172,14 +172,14 @@ const generateNetworkData = () => {
       val: 8 + Math.random() * 8,
       group: "서울대학교",
       color: "#a55eea",
-      fx: schoolCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
-      fy: schoolCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
-      fz: schoolCenter.z + sphereRadius * Math.cos(phi),
+      fx: schoolCenter.x + radius * Math.cos(angle) + (Math.random() - 0.5) * 28,
+      fy: schoolCenter.y + height + (Math.random() - 0.5) * 40,
+      fz: schoolCenter.z + radius * Math.sin(angle) + (Math.random() - 0.5) * 28,
     });
     links.push({ source: "user", target: id, strength: 0.4 + Math.random() * 0.4 });
   });
 
-  // 5. 동아리 그룹 (14명) - 주황색 계열 (왼쪽 뒤 구)
+  // 5. 동아리 그룹 (14명) - 주황색 계열 (왼쪽 뒤 구역, 자연스럽게 분산)
   const clubMembers = [
     "최안선",
     "김소현",
@@ -196,11 +196,11 @@ const generateNetworkData = () => {
     "이동호",
     "정성호",
   ];
-  const clubCenter = { x: -85, y: -40, z: -85 }; // 왼쪽 뒤
+  const clubCenter = { x: -60, y: -20, z: -60 }; // 왼쪽 뒤 (중심에서 더 가까이)
   clubMembers.forEach((name, i) => {
-    const phi = Math.acos(1 - (2 * (i + 0.5)) / clubMembers.length);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
-    const sphereRadius = 34;
+    const angle = (i / clubMembers.length) * 2 * Math.PI + (Math.random() - 0.5) * 1.2;
+    const radius = 16 + (Math.random() - 0.5) * 36; // 반지름 변화 2배 증가
+    const height = (Math.random() - 0.5) * 52; // 높이 변화 2배 증가
 
     const id = `club_${i}`;
     nodes.push({
@@ -209,20 +209,20 @@ const generateNetworkData = () => {
       val: 6 + Math.random() * 8,
       group: "축구동아리",
       color: "#ffa502",
-      fx: clubCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta),
-      fy: clubCenter.y + sphereRadius * Math.sin(phi) * Math.sin(theta),
-      fz: clubCenter.z + sphereRadius * Math.cos(phi),
+      fx: clubCenter.x + radius * Math.cos(angle) + (Math.random() - 0.5) * 24,
+      fy: clubCenter.y + height + (Math.random() - 0.5) * 36,
+      fz: clubCenter.z + radius * Math.sin(angle) + (Math.random() - 0.5) * 24,
     });
     links.push({ source: "user", target: id, strength: 0.3 + Math.random() * 0.4 });
   });
 
-  // 그룹 내 연결 생성
+  // 그룹 내 연결 생성 (2배 증가)
   const createGroupConnections = () => {
     // 가족 그룹 내 연결 (가족끼리는 서로 잘 알고 있음)
     for (let i = 0; i < familyMembers.length; i++) {
       for (let j = i + 1; j < familyMembers.length; j++) {
-        if (Math.random() > 0.3) {
-          // 70% 확률로 연결
+        if (Math.random() > 0.15) {
+          // 85% 확률로 연결 (기존 70%에서 증가)
           links.push({
             source: `family_${i}`,
             target: `family_${j}`,
@@ -232,11 +232,11 @@ const generateNetworkData = () => {
       }
     }
 
-    // 친구 그룹 내 연결 (친구들끼리 일부 연결)
+    // 친구 그룹 내 연결 (친구들끼리 더 많은 연결)
     for (let i = 0; i < friends.length; i++) {
       for (let j = i + 1; j < friends.length; j++) {
-        if (Math.random() > 0.7) {
-          // 30% 확률로 연결
+        if (Math.random() > 0.35) {
+          // 65% 확률로 연결 (기존 30%에서 2배 이상 증가)
           links.push({
             source: `friend_${i}`,
             target: `friend_${j}`,
@@ -391,7 +391,7 @@ export default function NetworkPage() {
             .onNodeClick((node) => {
               setSelectedNode(node);
               // 노드 클릭 시 카메라 포커스
-              Graph.cameraPosition({ x: node.x + 50, y: node.y + 50, z: node.z + 50 }, node, 1000);
+              Graph.cameraPosition({ x: node.x + 100, y: node.y + 100, z: node.z + 100 }, node, 1000);
             })
             .onNodeHover((node) => {
               // 호버 시 커서 변경
@@ -770,18 +770,70 @@ export default function NetworkPage() {
               <h3 className="text-lg font-semibold mb-4">네트워크 정보</h3>
 
               {selectedNode ? (
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-blue-400">{selectedNode.name}</h4>
-                    <p className="text-sm text-gray-400">그룹: {selectedNode.group}</p>
-                    <p className="text-sm text-gray-400">연결 강도: {selectedNode.val}</p>
+                <div className="space-y-4">
+                  {/* 선택된 노드 정보 카드 */}
+                  <div className="bg-gradient-to-br from-gray-700 to-gray-600 rounded-xl p-4 border border-gray-600">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
+                        style={{ backgroundColor: selectedNode.color }}
+                      >
+                        {selectedNode.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-white text-lg">{selectedNode.name}</h4>
+                        <p className="text-sm text-gray-300">{selectedNode.group}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-400">연결 강도</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-gray-600 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                              style={{ width: `${Math.min(selectedNode.val * 4, 100)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold text-white">{Math.round(selectedNode.val)}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button
-                    className="w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-colors"
-                    onClick={() => setSelectedNode(null)}
-                  >
-                    선택 해제
-                  </button>
+
+                  {/* 액션 버튼들 */}
+                  <div className="space-y-2">
+                    <button
+                      className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg text-sm font-medium transition-all transform hover:scale-105 shadow-lg"
+                      onClick={() => {
+                        alert(`${selectedNode.name}님에게 메시지를 보내는 기능은 준비중 입니다!`);
+                      }}
+                    >
+                      💬 메시지 보내기
+                    </button>
+
+                    <button
+                      className="w-full px-4 py-2 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 rounded-lg text-sm font-medium transition-all transform hover:scale-105 shadow-lg"
+                      onClick={() => {
+                        alert(`${selectedNode.name}님의 프로필을 보는 기능은 준비중 입니다!`);
+                      }}
+                    >
+                      👤 프로필 보기
+                    </button>
+
+                    <button
+                      className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition-colors"
+                      onClick={() => {
+                        setSelectedNode(null);
+                        if (graphRef.current) {
+                          graphRef.current.zoomToFit(1000, 50);
+                        }
+                      }}
+                    >
+                      ✕ 선택 해제
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">
