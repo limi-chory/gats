@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Mock 데이터
 const MOCK_PROFILE = {
@@ -57,11 +57,40 @@ export default function DashboardPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [isNewUser] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Toast 메시지 표시 (미구현 기능 클릭 시)
   const showComingSoonToast = (featureName: string) => {
     alert(`🚧 "${featureName}" 기능은 곧 출시됩니다!\n\n현재는 프로토타입 단계입니다.`);
   };
+
+  // 검색 처리 함수
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+
+    // 검색어를 URL 파라미터로 전달하여 search 페이지로 이동
+    const encodedQuery = encodeURIComponent(searchQuery.trim());
+    router.push(`/search?q=${encodedQuery}`);
+  };
+
+  // 프로필 드롭다운 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    if (isProfileDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isProfileDropdownOpen]);
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -104,131 +133,192 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            안녕하세요, {user?.firstName || MOCK_PROFILE.name}님! 👋
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">오늘도 새로운 연결을 만들어보세요</p>
+          <div className="flex items-center justify-between">
+            {/* 헤더 제목과 설명 */}
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                안녕하세요, {user?.firstName || MOCK_PROFILE.name}님! 👋
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">오늘도 새로운 연결을 만들어보세요</p>
+            </div>
+
+            {/* 내정보 버튼 및 드롭다운 */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="flex items-center gap-3 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
+              >
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                  {(user?.firstName?.[0] || MOCK_PROFILE.name[0]).toUpperCase()}
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">내정보</span>
+                <svg
+                  className={`w-4 h-4 text-gray-500 transition-transform ${isProfileDropdownOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* 프로필 드롭다운 */}
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 animate-in slide-in-from-top-2 duration-200">
+                  <div className="p-6">
+                    <div className="absolute top-4 right-4 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
+                      📝 Mock 데이터
+                    </div>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                        {(user?.firstName?.[0] || MOCK_PROFILE.name[0]).toUpperCase()}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {user?.fullName || MOCK_PROFILE.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{MOCK_PROFILE.company}</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                          />
+                        </svg>
+                        {MOCK_PROFILE.company}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                          />
+                        </svg>
+                        {MOCK_PROFILE.school}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {MOCK_PROFILE.interests.map((interest) => (
+                        <span
+                          key={interest}
+                          className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium"
+                        >
+                          {interest}
+                        </span>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        showComingSoonToast("프로필 수정");
+                        setIsProfileDropdownOpen(false);
+                      }}
+                      className="w-full px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    >
+                      프로필 수정 <span className="text-xs">🚧</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <button
-            onClick={() => router.push("/messages")}
-            className="bg-gradient-to-br from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                />
-              </svg>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Network Map - 2/3 width */}
+          <div className="md:col-span-2">
+            <button
+              onClick={() => router.push("/network")}
+              className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-8 text-left transition-all transform hover:scale-105 shadow-lg relative"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                  />
+                </svg>
+                <span className="text-blue-100 text-lg">→</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2">네트워크 맵</h3>
+              <p className="text-blue-100 text-base">내 인맥을 시각적으로 탐색하고 연결 관계를 확인하세요</p>
+            </button>
+          </div>
+
+          {/* Network Stats - 1/3 width */}
+          <div className="md:col-span-1">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 relative h-full">
+              <div className="absolute top-3 right-3 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
+                📝 Mock 데이터
+              </div>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3">네트워크 통계 📊</h3>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400">전체 연락처</span>
+                  </div>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                    {MOCK_NETWORK_STATS.totalContacts}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400">연결된 사용자</span>
+                  </div>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                    {MOCK_NETWORK_STATS.connectedUsers}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-500 rounded-full" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400">네트워크 그룹</span>
+                  </div>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{MOCK_NETWORK_STATS.clusters}</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400">강한 연결</span>
+                  </div>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                    {MOCK_NETWORK_STATS.strongConnections}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-3 border-t dark:border-gray-700">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-500 dark:text-gray-400">네트워크 강도</span>
+                  <span className="text-green-600 dark:text-green-400 font-semibold">양호</span>
+                </div>
+                <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mt-1 overflow-hidden">
+                  <div className="h-full bg-green-500 rounded-full" style={{ width: "73%" }} />
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-semibold mb-1">메시지</h3>
-            <p className="text-yellow-100 text-sm">대화 내역 보기</p>
-          </button>
-          <button
-            onClick={() => router.push("/network")}
-            className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                />
-              </svg>
-              <span className="text-blue-100 text-sm">→</span>
-            </div>
-            <h3 className="text-xl font-semibold mb-1">네트워크 맵</h3>
-            <p className="text-blue-100 text-sm">내 인맥을 시각적으로 탐색하기</p>
-          </button>
-          <button
-            onClick={() => router.push("/search")}
-            className="bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-6 text-left transition-all transform hover:scale-105 shadow-lg relative"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <span className="text-purple-100 text-sm">→</span>
-            </div>
-            <h3 className="text-xl font-semibold mb-1">AI 검색</h3>
-            <p className="text-purple-100 text-sm">원하는 사람 찾기</p>
-          </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Stats & Profile */}
+          {/* Left Column - Stats & Notifications */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Profile Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative">
-              <div className="absolute top-4 right-4 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
-                📝 Mock 데이터
-              </div>
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  {(user?.firstName?.[0] || MOCK_PROFILE.name[0]).toUpperCase()}
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {user?.fullName || MOCK_PROFILE.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{MOCK_PROFILE.company}</p>
-                </div>
-              </div>
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                    />
-                  </svg>
-                  {MOCK_PROFILE.company}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                  {MOCK_PROFILE.school}
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {MOCK_PROFILE.interests.map((interest) => (
-                  <span
-                    key={interest}
-                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium"
-                  >
-                    {interest}
-                  </span>
-                ))}
-              </div>
-
-              <button
-                onClick={() => showComingSoonToast("프로필 수정")}
-                className="w-full mt-4 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-              >
-                프로필 수정 <span className="text-xs">🚧</span>
-              </button>
-            </div>
-
             {/* Group Activity Notifications */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative">
               <div className="absolute top-4 right-4 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
@@ -251,9 +341,13 @@ export default function DashboardPage() {
                         서울대학교 경영학과 23학번
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
-                        최근 그룹에서{" "}
-                        <span className="font-medium text-blue-600 dark:text-blue-400">창업 및 팀빌딩</span> 관련 대화가{" "}
-                        <span className="font-bold text-green-600 dark:text-green-400">31%</span> 늘었어요.
+                        <span>최근 그룹에서 </span>
+                        <span className="font-medium text-blue-600 dark:text-blue-400">창업 및 팀빌딩</span>{" "}
+                        <span> 관련 대화가 </span>
+                        <span className="font-bold text-green-600 dark:text-green-400">31%</span>
+                        <span>늘었어요. </span>
+                        <span className="font-bold text-green-600 dark:text-red-400">슈카</span>
+                        <span> 님에게 무슨일이 벌어지고 있는지 물어보세요.</span>
                       </p>
                     </div>
                   </div>
@@ -268,8 +362,13 @@ export default function DashboardPage() {
                     <div className="flex-1">
                       <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">가족</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
-                        최근 그룹에서 <span className="font-medium text-green-600 dark:text-green-400">추석 명절</span>{" "}
-                        관련 새로운 대화가 시작되고있어요.
+                        <span>최근 그룹에서 </span>
+                        <span className="font-medium text-green-600 dark:text-green-400">추석 명절</span>
+                        <span> 관련 새로운 대화가 시작되고있어요. </span>
+                        <span className="font-bold text-green-600 dark:text-red-400">작은 아버지</span>
+                        <span> 님에게 </span>
+                        <span className="font-medium text-green-600 dark:text-green-400">연휴 계획</span>
+                        <span> 에 대해 물어보세요.</span>
                       </p>
                     </div>
                   </div>
@@ -284,9 +383,13 @@ export default function DashboardPage() {
                     <div className="flex-1">
                       <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">네이버</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
-                        최근 그룹에서{" "}
-                        <span className="font-medium text-purple-600 dark:text-purple-400">스테이블 코인 프로젝트</span>{" "}
-                        관련 대화가 <span className="font-bold text-green-600 dark:text-green-400">22%</span> 늘었어요.
+                        <span>최근 그룹에서 </span>
+                        <span className="font-medium text-purple-600 dark:text-purple-400">스테이블 코인 프로젝트</span>
+                        <span> 관련 대화가 </span>
+                        <span className="font-bold text-green-600 dark:text-green-400">22%</span>
+                        <span> 늘었어요. 최신 기술 동향을 확인하고, </span>
+                        <span className="font-bold text-green-600 dark:text-red-400">연구소 담당자</span>
+                        <span> 님에게 프로젝트 진행 상황을 물어보세요.</span>
                       </p>
                     </div>
                   </div>
@@ -305,68 +408,88 @@ export default function DashboardPage() {
                 <span className="text-xs">🚧</span>
               </button>
             </div>
-
-            {/* Network Stats */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative">
-              <div className="absolute top-4 right-4 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
-                📝 Mock 데이터
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">네트워크 통계 📊</h3>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">전체 연락처</span>
-                  </div>
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">
-                    {MOCK_NETWORK_STATS.totalContacts}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">연결된 사용자</span>
-                  </div>
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">
-                    {MOCK_NETWORK_STATS.connectedUsers}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">네트워크 그룹</span>
-                  </div>
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">{MOCK_NETWORK_STATS.clusters}</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">강한 연결</span>
-                  </div>
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">
-                    {MOCK_NETWORK_STATS.strongConnections}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t dark:border-gray-700">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500 dark:text-gray-400">네트워크 강도</span>
-                  <span className="text-green-600 dark:text-green-400 font-semibold">양호</span>
-                </div>
-                <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mt-2 overflow-hidden">
-                  <div className="h-full bg-green-500 rounded-full" style={{ width: "73%" }} />
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Column - Activity */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Tips Card */}
+            {/* <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">💡 팁: AI 검색을 활용해보세요!</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    &ldquo;시리즈 A 투자자 찾아줘&rdquo; 또는 &ldquo;카카오 다니는 디자이너&rdquo;처럼 자연스럽게
+                    말해보세요. AI가 당신의 네트워크에서 최적의 경로를 찾아드립니다!
+                  </p>
+                </div>
+              </div>
+            </div> */}
+
+            {/* AI Search Box */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                  <span className="text-purple-500">🔍</span>
+                  AI 네트워크 검색
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  자연스럽게 말해보세요. AI가 당신의 네트워크에서 찾아드립니다.
+                </p>
+              </div>
+
+              {/* Search Input */}
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  placeholder="예: 구글 다니는 개발자, 시리즈 A 투자자..."
+                  className="w-full px-4 py-3 text-base border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 pr-20"
+                />
+                <button
+                  onClick={handleSearch}
+                  disabled={!searchQuery.trim()}
+                  className={`absolute right-2 top-2 px-4 py-1.5 rounded-md font-semibold text-sm transition-all ${
+                    !searchQuery.trim()
+                      ? "bg-gray-200 dark:bg-gray-600 text-gray-400 cursor-not-allowed"
+                      : "bg-purple-600 text-white hover:bg-purple-700 transform hover:scale-105"
+                  }`}
+                >
+                  검색
+                </button>
+              </div>
+
+              {/* Quick Search Suggestions */}
+              <div className="mt-4">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">빠른 검색:</p>
+                <div className="flex flex-wrap gap-2">
+                  {["구글 개발자", "시리즈 A 투자자", "카카오 디자이너", "스타트업 창업가"].map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      onClick={() => {
+                        setSearchQuery(suggestion);
+                        const encodedQuery = encodeURIComponent(suggestion);
+                        router.push(`/search?q=${encodedQuery}`);
+                      }}
+                      className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
             {/* Recent Searches */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative">
               <div className="absolute top-4 right-20 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-xs font-bold px-2 py-1 rounded">
@@ -478,32 +601,35 @@ export default function DashboardPage() {
                 ))}
               </div>
             </div>
-
-            {/* Tips Card */}
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">💡 팁: AI 검색을 활용해보세요!</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    &ldquo;시리즈 A 투자자 찾아줘&rdquo; 또는 &ldquo;카카오 다니는 디자이너&rdquo;처럼 자연스럽게
-                    말해보세요. AI가 당신의 네트워크에서 최적의 경로를 찾아드립니다!
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+
+      {/* Floating Message Button */}
+      <button
+        onClick={() => router.push("/messages")}
+        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 z-50 flex items-center justify-center group"
+        aria-label="메시지 보기"
+      >
+        <svg
+          className="w-6 h-6 transition-transform group-hover:scale-110"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+
+        {/* 알림 배지 (읽지 않은 메시지가 있을 때) */}
+        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+          3
+        </div>
+      </button>
     </div>
   );
 }
